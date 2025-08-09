@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+<div class="head" style="padding-top: 50px; padding-bottom: 50px;">
+    <h1>My<span> Orders</span></h1>
+</div>
+
+<div class="orders-container" style="width: 80%; margin: auto; background-color: #222; padding: 25px; border-radius: 8px; color: white;">
+    
+    {% if orders %}
+        <table style="width: 100%; text-align: left; border-collapse: collapse;">
+            <thead style="border-bottom: 2px solid red;">
+                <tr>
+                    <th style="padding: 10px 5px;">Order ID</th>
+                    <th style="padding: 10px 5px;">Date</th>
+                    <th style="padding: 10px 5px;">Total Price</th>
+                    <th style="padding: 10px 5px;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+                <tr style="border-bottom: 1px solid #444;">
+                    <td style="padding: 15px 5px;">#{{ order.id }}</td>
+                    <td style="padding: 15px 5px;">{{ order.order_date.strftime('%d-%b-%Y %I:%M %p') }}</td>
+                    <td style="padding: 15px 5px;">₹{{ "%.2f"|format(order.total_price) }}</td>
+                    <td style="padding: 15px 5px;">
+                        <span class="status-{{ order.status.lower().replace(' ', '-') }}" style="padding: 5px 10px; border-radius: 15px; background-color: #555; color: white;">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div style="text-align: center; padding: 50px;">
+            <h2>You haven't placed any orders yet.</h2>
+            <p style="color: #ccc; margin-top: 10px;">All your past orders will be saved here.</p>
+            <a href="{{ url_for('home') }}" style="display: inline-block; margin-top: 20px;">
+                 <button style="padding: 12px 25px; font-size: 18px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Start Shopping</button>
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

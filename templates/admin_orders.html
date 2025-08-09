@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block title %}Admin - All Orders{% endblock %}
+
+{% block content %}
+<div class="head" style="padding-top: 50px; padding-bottom: 50px;">
+    <h1>Admin Panel - <span>All Orders</span></h1>
+</div>
+
+<div class="orders-container" style="width: 95%; margin: auto; background-color: #222; padding: 25px; border-radius: 8px; color: white; overflow-x: auto;">
+    
+    {% if orders %}
+        <table style="width: 100%; text-align: left; border-collapse: collapse;">
+            <thead style="border-bottom: 2px solid red;">
+                <tr>
+                    <th style="padding: 10px 5px;">Order ID</th>
+                    <th style="padding: 10px 5px;">Customer</th>
+                    <th style="padding: 10px 5px;">Date</th>
+                    <th style="padding: 10px 5px;">Total Price</th>
+                    <th style="padding: 10px 5px; min-width: 250px;">Update Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+                <tr style="border-bottom: 1px solid #444;">
+                    <td style="padding: 15px 5px;">#{{ order.id }}</td>
+                    <td style="padding: 15px 5px;">
+                        {{ order.name }}<br>
+                        <small style="color: #ccc;">{{ order.email }}</small>
+                    </td>
+                    <td style="padding: 15px 5px;">{{ order.order_date.strftime('%d-%b-%Y') }}</td>
+                    <td style="padding: 15px 5px;">₹{{ "%.2f"|format(order.total_price) }}</td>
+                    <td style="padding: 15px 5px;">
+                        <form action="{{ url_for('update_order_status', order_id=order.id) }}" method="post" style="display: flex; align-items: center;">
+                            <select name="status" style="padding: 8px; border-radius: 4px; border: 1px solid #555; background-color: #333; color: white;">
+                                <option value="Order Placed" {% if order.status == 'Order Placed' %}selected{% endif %}>Order Placed</option>
+                                <option value="Preparing" {% if order.status == 'Preparing' %}selected{% endif %}>Preparing</option>
+                                <option value="Out for Delivery" {% if order.status == 'Out for Delivery' %}selected{% endif %}>Out for Delivery</option>
+                                <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                <option value="Cancelled" {% if order.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                            <button type="submit" style="margin-left: 10px; padding: 8px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Update</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div style="text-align: center; padding: 50px;">
+            <h2>No orders have been placed on the website yet.</h2>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

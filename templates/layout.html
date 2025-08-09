@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Zomato{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/food.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Courgette&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/f30fac2c61.js" crossorigin="anonymous"></script>
+    <style>
+        /* Flash messages ke liye extra CSS */
+        .flash-messages { list-style-type: none; padding: 0; margin: 1em 0; }
+        .flash-messages li { padding: 10px 15px; margin-bottom: 10px; border-radius: 4px; }
+        .flash-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;}
+        .flash-danger { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;}
+        .flash-info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo"><h1>Zomato</h1></div>
+            <ul>
+                <a href="{{ url_for('home') }}">Home</a>
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('my_orders') }}">My Orders</a>
+                    {% if current_user.is_admin %}
+                        <a href="{{ url_for('admin_orders') }}">Admin Panel</a>
+                    {% endif %}
+                    <a href="{{ url_for('cart') }}" style="position: relative;">
+                        Cart <span style="background-color: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; position: absolute; top: -10px; right: -15px;">{{ cart_count }}</span>
+                    </a>
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('register') }}">Register</a>
+                {% endif %}
+            </ul>
+        </nav>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <ul class="flash-messages">
+                {% for category, message in messages %}
+                <li class="flash-{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        {% endwith %}
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+        
+        <div class="footer">
+            <div class="text">
+                <h2>About Us</h2>
+                <p>Lorem ipsum dolor, sit amet consectetur adipisicing <br>
+                    elit. Quos nihil aliquam fuga ex obcaecati rerum <br>
+                    in sunt ducimus dolorum, officiis odit atque!</p>
+            </div>
+            <div class="text">
+                <h2>Our Foods</h2>
+                <p>Quality</p>
+                <p>price</p>
+                <p>service</p>
+                <p>Quality</p>
+
+            </div>
+            <div class="text">
+                <h2>Customer</h2>
+                <p>Service</p>
+                <p>Relation</p>
+                <p>quality</p>
+                <p>price</p>
+                <p>more</p>
+
+            </div>
+            <div class="text">
+                <h2>Contact Us</h2>
+                <p>A-33 Block</p>
+                <p>Kudlu Gate</p>
+                <p>service Road</p>
+                <p>0222-04444</p>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/food.js') }}"></script>
+</body>
+</html>

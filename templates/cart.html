@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block title %}Your Shopping Cart{% endblock %}
+
+{% block content %}
+<div class="head"><h1>Your Shopping <span>Cart</span></h1></div>
+<div class="cart-container" style="width: 80%; margin: auto; background: #222; padding: 20px; border-radius: 8px;">
+    {% if cart_items %}
+        <table style="width: 100%; text-align: left; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid red;">
+                    <th style="padding: 10px 5px;">Item</th>
+                    <th style="padding: 10px 5px;">Price</th>
+                    <th style="padding: 10px 5px;">Quantity</th>
+                    <th style="padding: 10px 5px;">Total</th>
+                    <th style="padding: 10px 5px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in cart_items %}
+                <tr style="border-bottom: 1px solid #444;">
+                    <td style="padding: 15px 5px;">{{ item.name }}</td>
+                    <td style="padding: 15px 5px;">₹{{ "%.2f"|format(item.price) }}</td>
+                    <td style="padding: 15px 5px;">{{ item.quantity }}</td>
+                    <td style="padding: 15px 5px;">₹{{ "%.2f"|format(item.price * item.quantity) }}</td>
+                    <td style="padding: 15px 5px;">
+                        <form action="{{ url_for('remove_from_cart', food_id=item.id) }}" method="post" style="display: inline;">
+                            <button type="submit" style="background-color: transparent; color: #ff4d4d; border: none; cursor: pointer; font-size: 14px;">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <h3 style="text-align: right; margin-top: 30px; font-size: 24px;">Grand Total: <span style="color: #4CAF50;">₹{{ "%.2f"|format(total_price) }}</span></h3>
+        <div style="text-align: right; margin-top: 20px;">
+            <form action="{{ url_for('place_order') }}" method="post">
+                <button type="submit" style="padding: 12px 25px; font-size: 18px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Place Order</button>
+            </form>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 50px;">
+            <h2>Your cart is empty.</h2>
+            <p style="color: #ccc; margin-top: 10px;">Looks like you haven't added anything to your cart yet.</p>
+            <a href="{{ url_for('home') }}" style="display: inline-block; margin-top: 20px;">
+                 <button style="padding: 12px 25px; font-size: 18px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Start Shopping</button>
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
